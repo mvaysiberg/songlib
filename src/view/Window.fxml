@@ -5,17 +5,16 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="622.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ListView layoutX="408.0" layoutY="14.0" prefHeight="373.0" prefWidth="200.0" />
-      <Button layoutX="74.0" layoutY="328.0" mnemonicParsing="false" text="Add" />
-      <Button layoutX="196.0" layoutY="328.0" mnemonicParsing="false" text="Edit" />
-      <Button layoutX="311.0" layoutY="328.0" mnemonicParsing="false" text="Delete" />
+      <ListView fx:id="listView" layoutX="408.0" layoutY="14.0" prefHeight="373.0" prefWidth="200.0" />
+      <Button fx:id="add" layoutX="72.0" layoutY="328.0" mnemonicParsing="false" onAction="#changeData" text="Add" />
+      <Button fx:id="edit" layoutX="196.0" layoutY="328.0" mnemonicParsing="false" onAction="#changeData" text="Edit" />
+      <Button fx:id="delete" layoutX="311.0" layoutY="328.0" mnemonicParsing="false" onAction="#changeData" text="Delete" />
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-      <Text layoutX="72.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" wrappingWidth="287.22900390625" />
-      <Text layoutX="72.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Artist:" wrappingWidth="287.22900390625" />
-      <Text layoutX="72.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Album:" wrappingWidth="287.22900390625" />
-      <Text layoutX="72.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Year:" wrappingWidth="287.22900390625" />
+      <Text fx:id="name" layoutX="72.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" wrappingWidth="287.22900390625" />
+      <Text fx:id="artist" layoutX="72.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Artist:" wrappingWidth="287.22900390625" />
+      <Text fx:id="album" layoutX="72.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Album:" wrappingWidth="287.22900390625" />
+      <Text fx:id="year" layoutX="72.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Year:" wrappingWidth="287.22900390625" />
    </children>
 </AnchorPane>
