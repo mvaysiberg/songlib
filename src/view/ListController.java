@@ -31,7 +31,6 @@ public class ListController {
 	
 	public void start() {
 		songList = new ArrayList<String[]>();
-		obsList = FXCollections.observableArrayList();
 		
 		//get data from csv
 		try {
@@ -54,10 +53,7 @@ public class ListController {
 		songList.add(new String[] {"song1", "artist1", "album1", "year1"});
 		songList.add(new String[] {"song2", "artist2", "album2", "year2"});
 		
-		for (String[] songInfo: songList) {
-			obsList.add(songInfo[0]);
-		}
-		listView.setItems(obsList);
+		populateObsList();
 	}
 	public void changeData(ActionEvent e) {
 		Button b = (Button)e.getSource();
@@ -96,6 +92,23 @@ public class ListController {
 			System.out.println("edit");
 		}else if (b == delete) {
 			System.out.println("delete");
+			if (songList.isEmpty()) {
+				//throw an error, nothing to delete
+			}else {
+				int index = listView.getSelectionModel().getSelectedIndex();
+				songList.remove(index);
+				populateObsList();
+				if (songList.size() > index) {
+					listView.getSelectionModel().select(index);
+				}else if (songList.size() <= index && songList.size() > 0) {
+					listView.getSelectionModel().select(index -1);
+				}else {
+					name.setText("Name:");
+					artist.setText("Artist:");
+					album.setText("Album:");
+					year.setText("Year:");
+				}
+			}
 		}
 	}
 	
@@ -111,12 +124,14 @@ public class ListController {
 	private void showItem(Stage mainstage) {
 		//System.out.println("test");
 		int index = listView.getSelectionModel().getSelectedIndex();
-		String content = listView.getSelectionModel().getSelectedItem();
-		System.out.println("index: " + index + " content: " + content);
-		name.setText("Name: " + songList.get(index)[0]);
-		artist.setText("Artist: " + songList.get(index)[1]);
-		album.setText("Album: " + songList.get(index)[2]);
-		year.setText("Year: " + songList.get(index)[3]);
+		if (index >= 0) {
+			String content = listView.getSelectionModel().getSelectedItem();
+			System.out.println("index: " + index + " content: " + content);
+			name.setText("Name: " + songList.get(index)[0]);
+			artist.setText("Artist: " + songList.get(index)[1]);
+			album.setText("Album: " + songList.get(index)[2]);
+			year.setText("Year: " + songList.get(index)[3]);
+		}
 	}
 	
 	private String formattedString(String s){
@@ -165,5 +180,12 @@ public class ListController {
 		}else {//songs have same name, compare by artist name
 			return song1[1].toLowerCase().compareTo(song2[1].toLowerCase());
 		}
+	}
+	private void populateObsList() {
+		obsList = FXCollections.observableArrayList();
+		for (String[] songInfo: songList) {
+			obsList.add(songInfo[0]);
+		}
+		listView.setItems(obsList);
 	}
 }
