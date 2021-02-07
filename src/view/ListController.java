@@ -2,11 +2,14 @@ package view;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
@@ -60,15 +63,41 @@ public class ListController {
 		if (b == add) {
 			TextInputDialog dialog = new TextInputDialog();
 			dialog.initOwner(b.getScene().getWindow());
+			dialog.setHeaderText("Add Song to Song Library)");
+			dialog.setContentText("Enter name: ");
+			Optional<String> nameOutput = dialog.showAndWait();
+			if(nameOutput.isPresent()) {
+				String SongName = nameOutput.get();
+				SongName = formattedString(SongName);
+				if(SongName.equals("")) {
+					Alert empty = new Alert(AlertType.INFORMATION);
+					empty.initOwner(b.getScene().getWindow());
+					empty.setTitle("Alert");
+					empty.setHeaderText("Enter a song name.");
+					empty.showAndWait();
+				}
+				for(int i = 0; i < songList.size(); i++) {
+					//add check for name and artist -- currently only checks name
+					if(songList.get(i)[0].toLowerCase().equals(SongName.toLowerCase())) {
+						Alert exists = new Alert(AlertType.INFORMATION);
+						exists.initOwner(b.getScene().getWindow());
+						exists.setTitle("Alert");
+						exists.setHeaderText("Song already exists in library.");
+						exists.showAndWait();
+					}
+				}
+			}
 			
-			dialog.showAndWait();
 			System.out.println("add");
 		}else if (b == edit) {
+			
+			
 			System.out.println("edit");
 		}else if (b == delete) {
 			System.out.println("delete");
 		}
 	}
+	
 	public void start(Stage mainstage) {
 		
 		
@@ -87,5 +116,23 @@ public class ListController {
 		artist.setText("Artist: " + songList.get(index)[1]);
 		album.setText("Album: " + songList.get(index)[2]);
 		year.setText("Year: " + songList.get(index)[3]);
+	}
+	
+	private String formattedString(String s){
+		int first = 0;
+		for (; first < s.length(); ++first){
+			if(s.charAt(first) != ' ')
+				break;
+		}
+		int last = s.length() -1;
+		for (; last >= 0; --last){
+			if (s.charAt(last) != ' '){
+				break;
+			}
+		}
+		if (first == s.length() || last == -1){
+			return "";
+		}
+		return s.substring(first, last+1);
 	}
 }
