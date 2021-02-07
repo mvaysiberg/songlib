@@ -15,6 +15,7 @@ public class SongLib extends Application {
 		AnchorPane root = (AnchorPane)loader.load();
 		ListController listController= loader.getController();
 		listController.start();
+		listController.start(primaryStage);
 		Scene scene = new Scene(root, 200, 300);
 		primaryStage.setScene(scene);
 		primaryStage.show();
