@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Scanner;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -41,7 +42,7 @@ public class ListController {
 				songEntry = new String[] {sc.next(), sc.next(), sc.next(), sc.next()};
 				//last entry may have a '\n'
 				//need to add in sorted
-				songList.add(songEntry);
+				insertSorted(songEntry);
 			}
 			sc.close();
 		}catch(Exception e) {
@@ -134,5 +135,35 @@ public class ListController {
 			return "";
 		}
 		return s.substring(first, last+1);
+	}
+	private void insertSorted(String[] song) {
+		if (songList.isEmpty()) {
+			songList.add(song);
+		}else {
+			int left = 0;
+			int right = songList.size() -1;
+			int middle = -1;
+			while (left <= right) {
+				 middle = (left + right)/2;
+				 if (compareSongs(songList.get(middle), song) < 0) {
+					left = middle + 1;
+				 }else if (compareSongs(songList.get(middle), song) > 0) {
+					right = middle -1;
+				 }
+				 //do not have case when they are equal, should be caught previously
+			}
+				if (compareSongs(songList.get(middle), song) < 0)
+					songList.add(middle + 1, song);
+				else
+					songList.add(middle,song);
+		}
+	}
+	private int compareSongs(String[] song1, String[] song2) {
+		int comp1 = song1[0].toLowerCase().compareTo(song2[0].toLowerCase());
+		if (comp1 != 0) { //songs have different names
+			return comp1;
+		}else {//songs have same name, compare by artist name
+			return song1[1].toLowerCase().compareTo(song2[1].toLowerCase());
+		}
 	}
 }
