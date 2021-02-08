@@ -87,7 +87,15 @@ public class ListController {
 			
 			System.out.println("add");
 		}else if (b == edit) {
-			
+			int index = listView.getSelectionModel().getSelectedIndex();
+			//Songname needs to be replaced with inputed text
+			/*if(songList.get(index)[0].toLowerCase().equals(SongName.toLowerCase())) {
+				Alert exists = new Alert(AlertType.INFORMATION);
+				exists.initOwner(b.getScene().getWindow());
+				exists.setTitle("Alert");
+				exists.setHeaderText("Song already exists in library.");
+				exists.showAndWait();
+			}*/
 			
 			System.out.println("edit");
 		}else if (b == delete) {
