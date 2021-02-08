@@ -13,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -24,6 +25,10 @@ public class ListController {
 	@FXML Text artist;
 	@FXML Text album;
 	@FXML Text year;
+	@FXML TextField inputName;
+	@FXML TextField inputArtist;
+	@FXML TextField inputAlbum;
+	@FXML TextField inputYear;
 	@FXML ListView<String> listView;
 	
 	private ArrayList<String[]> songList;
@@ -89,14 +94,32 @@ public class ListController {
 		}else if (b == edit) {
 			int index = listView.getSelectionModel().getSelectedIndex();
 			//Songname needs to be replaced with inputed text
-			/*if(songList.get(index)[0].toLowerCase().equals(SongName.toLowerCase())) {
-				Alert exists = new Alert(AlertType.INFORMATION);
-				exists.initOwner(b.getScene().getWindow());
-				exists.setTitle("Alert");
-				exists.setHeaderText("Song already exists in library.");
-				exists.showAndWait();
-			}*/
+			String[] newSong = new String[]{inputName.getText(), inputArtist.getText(),
+					inputAlbum.getText(), inputYear.getText()};
+			for (int i = 0; i < 4; ++i) {
+				newSong[i] = formattedString(newSong[i]);
+			}
+			for (int i = 0; i < songList.size(); ++i) {
+				if (compareSongs(songList.get(i), newSong) == 0 && i!= index) {
+					//reject edit
+					Alert exists = new Alert(AlertType.INFORMATION);
+					exists.initOwner(b.getScene().getWindow());
+					exists.setTitle("Alert");
+					exists.setHeaderText("Song already exists in library.");
+					exists.showAndWait();
+					return;
+				}
+			}
+			//ask for confirmation
 			
+			//accept edit
+			songList.set(index, newSong);
+			populateObsList();
+			listView.getSelectionModel().select(index);
+			inputName.setText("");
+			inputArtist.setText("");
+			inputAlbum.setText("");
+			inputYear.setText("");
 			System.out.println("edit");
 		}else if (b == delete) {
 			System.out.println("delete");
@@ -104,6 +127,9 @@ public class ListController {
 				//throw an error, nothing to delete
 			}else {
 				int index = listView.getSelectionModel().getSelectedIndex();
+				//ask for confirmation
+				
+				
 				songList.remove(index);
 				populateObsList();
 				if (songList.size() > index) {
