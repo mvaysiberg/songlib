@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
@@ -63,59 +64,76 @@ public class ListController {
 	public void changeData(ActionEvent e) {
 		Button b = (Button)e.getSource();
 		if (b == add) {
-			TextInputDialog dialog = new TextInputDialog();
-			dialog.initOwner(b.getScene().getWindow());
-			dialog.setHeaderText("Add Song to Song Library)");
-			dialog.setContentText("Enter name: ");
-			Optional<String> nameOutput = dialog.showAndWait();
-			if(nameOutput.isPresent()) {
-				String SongName = nameOutput.get();
-				SongName = formattedString(SongName);
-				if(SongName.equals("")) {
+			Alert confirmAdd = new Alert(AlertType.CONFIRMATION, "Add " + inputName.getText() + "?", ButtonType.OK, ButtonType.CANCEL);
+			confirmAdd.showAndWait();
+			if(confirmAdd.getResult() == ButtonType.OK) {
+				String[] newSong = new String[]{inputName.getText(), inputArtist.getText(),
+						inputAlbum.getText(), inputYear.getText()};
+				for (int i = 0; i < 4; ++i) {
+					newSong[i] = formattedString(newSong[i]);
+				}
+				if(newSong[0].equals("") || newSong[1].equals("")) {
 					Alert empty = new Alert(AlertType.INFORMATION);
 					empty.initOwner(b.getScene().getWindow());
 					empty.setTitle("Alert");
-					empty.setHeaderText("Enter a song name.");
+					empty.setHeaderText("Enter both song name and artist.");
 					empty.showAndWait();
+					return;
 				}
-				for(int i = 0; i < songList.size(); i++) {
-					//add check for name and artist -- currently only checks name
-					if(songList.get(i)[0].toLowerCase().equals(SongName.toLowerCase())) {
+				for (int i = 0; i < songList.size(); ++i) {
+					if (compareSongs(songList.get(i), newSong) == 0) {
+						//reject edit
 						Alert exists = new Alert(AlertType.INFORMATION);
 						exists.initOwner(b.getScene().getWindow());
 						exists.setTitle("Alert");
 						exists.setHeaderText("Song already exists in library.");
 						exists.showAndWait();
+						return;
 					}
 				}
+				insertSorted(newSong);
+				populateObsList();
+				//NEED TO SELECT NEW SONG
+				//listView.getSelectionModel().select(index);
 			}
-			
+			inputName.setText("");
+			inputArtist.setText("");
+			inputAlbum.setText("");
+			inputYear.setText("");
 			System.out.println("add");
 		}else if (b == edit) {
 			int index = listView.getSelectionModel().getSelectedIndex();
-			//Songname needs to be replaced with inputed text
-			String[] newSong = new String[]{inputName.getText(), inputArtist.getText(),
-					inputAlbum.getText(), inputYear.getText()};
-			for (int i = 0; i < 4; ++i) {
-				newSong[i] = formattedString(newSong[i]);
-			}
-			for (int i = 0; i < songList.size(); ++i) {
-				if (compareSongs(songList.get(i), newSong) == 0 && i!= index) {
-					//reject edit
-					Alert exists = new Alert(AlertType.INFORMATION);
-					exists.initOwner(b.getScene().getWindow());
-					exists.setTitle("Alert");
-					exists.setHeaderText("Song already exists in library.");
-					exists.showAndWait();
+			Alert confirmEdit = new Alert(AlertType.CONFIRMATION, "Edit " + songList.get(index)[0] + "?", ButtonType.OK, ButtonType.CANCEL);
+			confirmEdit.showAndWait();
+			if(confirmEdit.getResult() == ButtonType.OK) {
+				String[] newSong = new String[]{inputName.getText(), inputArtist.getText(),
+						inputAlbum.getText(), inputYear.getText()};
+				for (int i = 0; i < 4; ++i) {
+					newSong[i] = formattedString(newSong[i]);
+				}
+				if(newSong[0].equals("") || newSong[1].equals("")) {
+					Alert empty = new Alert(AlertType.INFORMATION);
+					empty.initOwner(b.getScene().getWindow());
+					empty.setTitle("Alert");
+					empty.setHeaderText("Enter both song name and artist.");
+					empty.showAndWait();
 					return;
 				}
+				for (int i = 0; i < songList.size(); ++i) {
+					if (compareSongs(songList.get(i), newSong) == 0 && i!= index) {
+						//reject edit
+						Alert exists = new Alert(AlertType.INFORMATION);
+						exists.initOwner(b.getScene().getWindow());
+						exists.setTitle("Alert");
+						exists.setHeaderText("Song already exists in library.");
+						exists.showAndWait();
+						return;
+					}
+				}
+				songList.set(index, newSong);
+				populateObsList();
+				listView.getSelectionModel().select(index);
 			}
-			//ask for confirmation
-			
-			//accept edit
-			songList.set(index, newSong);
-			populateObsList();
-			listView.getSelectionModel().select(index);
 			inputName.setText("");
 			inputArtist.setText("");
 			inputAlbum.setText("");
@@ -124,23 +142,31 @@ public class ListController {
 		}else if (b == delete) {
 			System.out.println("delete");
 			if (songList.isEmpty()) {
-				//throw an error, nothing to delete
+				//empty library
+				Alert empty = new Alert(AlertType.INFORMATION);
+				empty.initOwner(b.getScene().getWindow());
+				empty.setTitle("Alert");
+				empty.setHeaderText("The song library is empty.");
+				empty.showAndWait();
+				return;
 			}else {
 				int index = listView.getSelectionModel().getSelectedIndex();
 				//ask for confirmation
-				
-				
-				songList.remove(index);
-				populateObsList();
-				if (songList.size() > index) {
-					listView.getSelectionModel().select(index);
-				}else if (songList.size() <= index && songList.size() > 0) {
-					listView.getSelectionModel().select(index -1);
-				}else {
-					name.setText("Name:");
-					artist.setText("Artist:");
-					album.setText("Album:");
-					year.setText("Year:");
+				Alert confirmDelete = new Alert(AlertType.CONFIRMATION, "Delete " + songList.get(index)[0] + "?", ButtonType.OK, ButtonType.CANCEL);
+				confirmDelete.showAndWait();
+				if(confirmDelete.getResult() == ButtonType.OK) {
+					songList.remove(index);
+					populateObsList();
+					if (songList.size() > index) {
+						listView.getSelectionModel().select(index);
+					}else if (songList.size() <= index && songList.size() > 0) {
+						listView.getSelectionModel().select(index -1);
+					}else {
+						name.setText("Name:");
+						artist.setText("Artist:");
+						album.setText("Album:");
+						year.setText("Year:");
+					}
 				}
 			}
 		}
