@@ -21,7 +21,7 @@
       <TextField fx:id="inputName" layoutX="90.0" layoutY="178.0" prefHeight="27.0" prefWidth="222.0" />
       <Text layoutX="39.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Selected Song" underline="true" wrappingWidth="222.23779296875" />
       <Text fx:id="changeName" layoutX="39.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" wrappingWidth="41.0" />
-      <Text layoutX="39.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add/Edit Song List" underline="true" />
+      <Text layoutX="39.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add/Edit Song" underline="true" />
       <TextField fx:id="inputArtist" layoutX="90.0" layoutY="215.0" prefHeight="27.0" prefWidth="222.0" />
       <Text fx:id="changeArtist" layoutX="39.0" layoutY="233.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Artist:" wrappingWidth="41.0" />
       <TextField fx:id="inputAlbum" layoutX="90.0" layoutY="251.0" prefHeight="27.0" prefWidth="222.0" />
