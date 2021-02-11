@@ -91,10 +91,10 @@ public class ListController {
 						return;
 					}
 				}
-				insertSorted(newSong);
+				int insertedIndex = insertSorted(newSong);
 				populateObsList();
 				//NEED TO SELECT NEW SONG
-				//listView.getSelectionModel().select(index);
+				listView.getSelectionModel().select(insertedIndex);
 			}
 			inputName.setText("");
 			inputArtist.setText("");
@@ -102,6 +102,15 @@ public class ListController {
 			inputYear.setText("");
 			System.out.println("add");
 		}else if (b == edit) {
+			if (songList.isEmpty()) {
+				//empty library
+				Alert empty = new Alert(AlertType.INFORMATION);
+				empty.initOwner(b.getScene().getWindow());
+				empty.setTitle("Alert");
+				empty.setHeaderText("The song library is empty.");
+				empty.showAndWait();
+				return;
+			}
 			int index = listView.getSelectionModel().getSelectedIndex();
 			Alert confirmEdit = new Alert(AlertType.CONFIRMATION, "Edit " + songList.get(index)[0] + "?", ButtonType.OK, ButtonType.CANCEL);
 			confirmEdit.showAndWait();
@@ -130,9 +139,10 @@ public class ListController {
 						return;
 					}
 				}
-				songList.set(index, newSong);
+				songList.remove(index);
+				int insertedIndex = insertSorted(newSong);
 				populateObsList();
-				listView.getSelectionModel().select(index);
+				listView.getSelectionModel().select(insertedIndex);
 			}
 			inputName.setText("");
 			inputArtist.setText("");
@@ -211,9 +221,10 @@ public class ListController {
 		}
 		return s.substring(first, last+1);
 	}
-	private void insertSorted(String[] song) {
+	private int insertSorted(String[] song) {
 		if (songList.isEmpty()) {
 			songList.add(song);
+			return 0;
 		}else {
 			int left = 0;
 			int right = songList.size() -1;
@@ -227,10 +238,13 @@ public class ListController {
 				 }
 				 //do not have case when they are equal, should be caught previously
 			}
-				if (compareSongs(songList.get(middle), song) < 0)
+				if (compareSongs(songList.get(middle), song) < 0) {
 					songList.add(middle + 1, song);
-				else
+					return middle + 1;
+				}else {
 					songList.add(middle,song);
+					return middle;
+				}
 		}
 	}
 	private int compareSongs(String[] song1, String[] song2) {
@@ -244,7 +258,7 @@ public class ListController {
 	private void populateObsList() {
 		obsList = FXCollections.observableArrayList();
 		for (String[] songInfo: songList) {
-			obsList.add(songInfo[0]);
+			obsList.add(songInfo[0] + " by " + songInfo[1]);
 		}
 		listView.setItems(obsList);
 	}
