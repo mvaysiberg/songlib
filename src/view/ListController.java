@@ -1,6 +1,7 @@
 package view;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Scanner;
@@ -41,7 +42,7 @@ public class ListController {
 		//get data from csv
 		try {
 			Scanner sc = new Scanner(new File("./Data/songs.csv"));
-			sc.useDelimiter("|");
+			sc.useDelimiter("\\||\\n");
 			String[] songEntry = new String[4];
 			while (sc.hasNext()) {
 				songEntry = new String[] {sc.next(), sc.next(), sc.next(), sc.next()};
@@ -56,8 +57,8 @@ public class ListController {
 		
 		
 		
-		songList.add(new String[] {"song1", "artist1", "album1", "year1"});
-		songList.add(new String[] {"song2", "artist2", "album2", "year2"});
+		//songList.add(new String[] {"song1", "artist1", "album1", "year1"});
+		//songList.add(new String[] {"song2", "artist2", "album2", "year2"});
 		
 		populateObsList();
 	}
@@ -189,6 +190,7 @@ public class ListController {
 		addListener((obs, oldVal, newVal)-> showItem(mainstage));
 		//select the first item
 		listView.getSelectionModel().select(0);
+		mainstage.setOnCloseRequest(event->save());
 	}
 	
 	private void showItem(Stage mainstage) {
@@ -261,5 +263,17 @@ public class ListController {
 			obsList.add(songInfo[0] + " by " + songInfo[1]);
 		}
 		listView.setItems(obsList);
+	}
+	private void save() {
+		try {
+			FileWriter f = new FileWriter("./Data/songs.csv",false);
+			for (String[] song: songList) {
+				f.append(song[0] + '|' + song[1] + '|' + song[2] + '|' + song[3] + '\n');
+			}
+			f.close();
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+		System.out.println("Closing window!");
 	}
 }
