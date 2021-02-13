@@ -53,7 +53,7 @@ public class ListController {
 			}
 			sc.close();
 		}catch(Exception e) {
-			System.out.println(e);
+			//System.out.println(e);
 		}
 		
 		
@@ -102,7 +102,7 @@ public class ListController {
 			inputArtist.setText("");
 			inputAlbum.setText("");
 			inputYear.setText("");
-			System.out.println("add");
+			//System.out.println("add");
 		}else if (b == edit) {
 			if (songList.isEmpty()) {
 				//empty library
@@ -150,9 +150,9 @@ public class ListController {
 			inputArtist.setText("");
 			inputAlbum.setText("");
 			inputYear.setText("");
-			System.out.println("edit");
+			//System.out.println("edit");
 		}else if (b == delete) {
-			System.out.println("delete");
+			//System.out.println("delete");
 			if (songList.isEmpty()) {
 				//empty library
 				Alert empty = new Alert(AlertType.INFORMATION);
@@ -198,8 +198,8 @@ public class ListController {
 		//System.out.println("test");
 		int index = listView.getSelectionModel().getSelectedIndex();
 		if (index >= 0) {
-			String content = listView.getSelectionModel().getSelectedItem();
-			System.out.println("index: " + index + " content: " + content);
+			//String content = listView.getSelectionModel().getSelectedItem();
+			//System.out.println("index: " + index + " content: " + content);
 			name.setText("Name: " + songList.get(index)[0]);
 			artist.setText("Artist: " + songList.get(index)[1]);
 			album.setText("Album: " + songList.get(index)[2]);
@@ -273,8 +273,8 @@ public class ListController {
 			}
 			f.close();
 		}catch(Exception e) {
-			System.out.println(e);
+			//System.out.println(e);
 		}
-		System.out.println("Closing window!");
+		//System.out.println("Closing window!");
 	}
 }
