@@ -93,6 +93,14 @@ public class ListController {
 						return;
 					}
 				}
+				if (!checkNumeric(newSong[3])) {
+					Alert number = new Alert(AlertType.INFORMATION);
+					number.initOwner(b.getScene().getWindow());
+					number.setTitle("Alert");
+					number.setHeaderText("Year must be numeric and a positive integer");
+					number.showAndWait();
+					return;
+				}
 				int insertedIndex = insertSorted(newSong);
 				populateObsList();
 				//NEED TO SELECT NEW SONG
@@ -141,6 +149,16 @@ public class ListController {
 						return;
 					}
 				}
+				
+				if (!checkNumeric(newSong[3])) {
+					Alert number = new Alert(AlertType.INFORMATION);
+					number.initOwner(b.getScene().getWindow());
+					number.setTitle("Alert");
+					number.setHeaderText("Year must be numeric and a positive integer");
+					number.showAndWait();
+					return;
+				}
+				
 				songList.remove(index);
 				int insertedIndex = insertSorted(newSong);
 				populateObsList();
@@ -276,5 +294,17 @@ public class ListController {
 			//System.out.println(e);
 		}
 		//System.out.println("Closing window!");
+	}
+	
+	private boolean checkNumeric(String s) {
+		if (s.length() == 0) {
+			return true;
+		}
+		for (int i = 0; i < s.length(); ++i) {
+			if (!Character.isDigit(s.charAt(i))) {
+				return false;
+			}
+		}
+		return Integer.parseInt(s) > 0;
 	}
 }
